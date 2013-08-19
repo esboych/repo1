@@ -44,7 +44,7 @@ public class HomeController {
 	@RequestMapping(value = "/SSE", method = RequestMethod.GET)
 	public @ResponseBody void getSSE(Locale locale, Model model, HttpServletRequest request, 
 			HttpServletResponse response) throws IOException {
-		System.out.println("SSE called!!");
+		System.out.println("SSE called!!");  
 		
 		while(true){
 			try {
