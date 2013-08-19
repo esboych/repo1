@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Scope("request")
 public class HomeController {
 	int i;	
+	int externalPushCounter;
 	static int instanceId = 0;
 	public HomeController(){ instanceId++; System.out.println("HomeController instance # " + instanceId + "created");}
 	
@@ -39,6 +41,14 @@ public class HomeController {
 		System.out.println("home page called!!");
 		
 		return "home";
+	}
+	
+	@RequestMapping(value = "/remoteIncrement", method = RequestMethod.GET)
+	public String remoteIncrement(Locale locale, Model model, HttpServletRequest request, 
+					HttpServletResponse response) throws IOException {
+		System.out.println("home page called!!");
+		
+		return "remoteIncrement";
 	}
 	
 	@RequestMapping(value = "/SSE", method = RequestMethod.GET)
@@ -62,6 +72,37 @@ public class HomeController {
 //			System.out.println("SSE called " + i + " times");
 		}
 }
+
+	@RequestMapping(value = "/complexSSE", method = RequestMethod.GET)
+	public @ResponseBody void getComplexSSE(Locale locale, Model model, HttpServletRequest request, 
+			HttpServletResponse response) throws IOException {
+		System.out.println("complexSSE called!!");  
+		
+		while(true){
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			response.setContentType("text/event-stream");
+			response.setCharacterEncoding("UTF-8");
+			PrintWriter writer = response.getWriter();
+			String responseData = "data: {" + 
+				"\"msg\":\"hello world\"," + 
+				"\"id\":" + externalPushCounter +
+				"}\n\n";
+			writer.write(responseData);
+			writer.flush();
+//			System.out.println("SSE called " + i + " times");
+		}
+}
+
+	@RequestMapping(value="/increment")
+	public void handlePost(@RequestParam String action){
+
+		externalPushCounter++;
+		System.out.println("handlePost invoked" + externalPushCounter + " times");
+	}
 	
 
 	
