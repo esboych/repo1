@@ -24,10 +24,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Handles requests for the application home page.
  */
 @Controller
-@Scope("request")
 public class HomeController {
 	int i;	
-	int externalPushCounter;
+	static int externalPushCounter;
+	static boolean externalPushCounterIncremented = true;
 	static int instanceId = 0;
 	public HomeController(){ instanceId++; System.out.println("HomeController instance # " + instanceId + "created");}
 	
@@ -76,14 +76,15 @@ public class HomeController {
 	@RequestMapping(value = "/complexSSE", method = RequestMethod.GET)
 	public @ResponseBody void getComplexSSE(Locale locale, Model model, HttpServletRequest request, 
 			HttpServletResponse response) throws IOException {
-		System.out.println("complexSSE called!!");  
+		System.out.println("complexSSE called!!");
 		
 		while(true){
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+//			if(!externalPushCounterIncremented) return; 
 			response.setContentType("text/event-stream");
 			response.setCharacterEncoding("UTF-8");
 			PrintWriter writer = response.getWriter();
@@ -93,15 +94,18 @@ public class HomeController {
 				"}\n\n";
 			writer.write(responseData);
 			writer.flush();
+			externalPushCounterIncremented = false;
 //			System.out.println("SSE called " + i + " times");
 		}
 }
 
 	@RequestMapping(value="/increment")
-	public void handlePost(@RequestParam String action){
+	public String handlePost(){
 
 		externalPushCounter++;
+		externalPushCounterIncremented = true;
 		System.out.println("handlePost invoked" + externalPushCounter + " times");
+		return "remoteIncrement";
 	}
 	
 

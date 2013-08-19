@@ -10,7 +10,7 @@
 </h1>
 
 <br>
-<input type="submit" onclick = "window.location='increment'" name="save" value="save" />
+<input type="button" onclick = "location.href = 'increment'" name="save" value="save" />
 <br>
 <form action="increment">
     <input type="submit" value="Go to Google">  
