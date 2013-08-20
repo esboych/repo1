@@ -25,9 +25,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class HomeController {
 	int i; //synchronous counter for GEt requests
 	int j; //asynch counter for SSE requests
-	
+	static volatile float deg; // degrees value from XHR client HTML page, sending via SSe to another page	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
+	
+	public static float getDeg(){
+		return deg;
+	}
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
@@ -57,36 +61,36 @@ public class HomeController {
 	
 	@RequestMapping("SSE")
 	public @ResponseBody void answerSSE(HttpServletResponse response, HttpServletRequest request) throws Exception{
-		System.out.println("SSE activated");
-		
+//		System.out.println("SSE activated");	
+		while(true){
+		System.out.println("SSE: sending deg =" + deg);
 		response.setContentType("text/event-stream");
 		response.setCharacterEncoding("UTF-8");
 		Writer writer = response.getWriter();
-		writer.write("data:"+ j++ +"\n\n");
+		writer.write("data:"+ deg +"\n\n");
 		writer.flush();
-//		Thread.sleep(500);
+		Thread.sleep(900);
+		}
 		
 	}
 	
 	@RequestMapping("XHR")
 	public @ResponseBody void answerXHR(HttpServletResponse response, HttpServletRequest request) throws Exception{
 //	public String answerXHR(HttpServletResponse response, HttpServletRequest request) throws Exception{
-		System.out.println("XHR activated , name is: " + request.getParameter("name") + " with age " + request.getParameter("age"));
+		deg = Float.parseFloat(request.getParameter("deg"));
+		System.out.println("XHR activated , degrees is: " + deg);
+//		response.setHeader("Connection","close");
 		Writer writer = response.getWriter();
-		Calendar c = new GregorianCalendar();
-	    c.setTimeInMillis(System.currentTimeMillis()); // поскольку задача стоит - "сегодня", уточним ее до "текущий момент"
-	    c.add(Calendar.WEEK_OF_YEAR, -1);  // Здесь отнимем грегорианскую! неделю
-	    java.util.Date date = c.getTime(); // получаем объект типа java.util.Date
-		writer.write("hi from server! the server time is: " + date.getSeconds());
-		writer.close();
+		writer.write("hi from server! the server time is: " + i++);
+		writer.flush();
 //		Thread.sleep(3000);
 //		return "hi";
 	}
 	
-	@RequestMapping("getHi")
+	@RequestMapping("getRemoteBar")
 	public String giveHi(HttpServletResponse response, HttpServletRequest request) throws Exception{
 
-		return "hi";
+		return "remoteBar";
 	}
 	
 }
