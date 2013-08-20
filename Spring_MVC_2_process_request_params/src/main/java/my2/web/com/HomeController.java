@@ -47,10 +47,10 @@ public class HomeController {
 			formattedDate = dateFormat.format(date);
 			
 			resp.setContentType("text/event-stream");
-			resp.setCharacterEncoding("UTF-8");
+			resp.setCharacterEncoding("UTF-8");  
 			PrintWriter out = resp.getWriter();
 			String data = "data:" + sense2intDec + " uV , count= " + sensorSampleCount + " ,time is " + formattedDate + "\n\n";
-			out.write(data);
+			out.write(data);  
 			out.flush();
 		}
 	}
