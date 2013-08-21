@@ -25,9 +25,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class HomeController {
 	
 	static int sense2intDec;
-	int sensorSampleCount;
+	static int sensorSampleCount;
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-	String formattedDate;
+	static String formattedDate;
 
 	@RequestMapping(value = "/local")
 	public String webHome(Locale locale, Model model) {
