@@ -40,23 +40,27 @@ public class HomeController {
 	
 	@RequestMapping(value = "/SSE")
 	public @ResponseBody void noKeys(Locale locale, Model model, HttpServletRequest req, HttpServletResponse resp) throws Exception {
-		System.out.println("noKeys is called");
+		System.out.println("SSE is called");
 
 		while(true){
 			Thread.sleep(1200);
 			
 			Date date = new Date();
 			DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);		
-			formattedDate = dateFormat.format(date);
+			formattedDate = "\"" + dateFormat.format(date).toString() + "\"";
 			isUpdated=false;
+//			System.out.println("formattedDate=" + formattedDate);
+//			System.out.println("Date=" + date);
 			resp.setContentType("text/event-stream");
 			resp.setCharacterEncoding("UTF-8");  
 			PrintWriter out = resp.getWriter();
 			Random random = new Random();
 //			String data = "data:" + sense2intDec + " uV , count= " + sensorSampleCount + " ,time is " + formattedDate + "\n\n";
 //			String data = "data:" + sense2intDec + "\n\n";
+			/* Make json obj with all sensor data*/
 			String data = "data:{" + 
 					    "\"count\":" + sensorSampleCount +"," +
+					    "\"formattedDate\":" + formattedDate + "," +
 					    "\"sens0\":" + sense0intDec +"," +
 					    "\"sens1\":" + sense1intDec +"," +
 					    "\"sens2\":" + sense2intDec +"," +

@@ -7,7 +7,7 @@
 	#chart{
 		height:450px;
 		width:3200px;
-		top:300px;
+		top:250px;
 		left:5px;
 		background:	#eee;
 		position:absolute;
@@ -28,8 +28,8 @@
 	Sensor data 
 </h1>
 
-<P>  The time on the server is ${serverTime}. </P>
 <div id = "result"></div>
+<div id = "formattedDate">formattedDate</div>
 <div id = "count">count</div>
 <div id = "sens0">sens0</div>
 <div id = "sens1">sens1</div>
@@ -50,7 +50,7 @@ function createDot(xBias)
 		dot.className = 'dot';
 		dotCoordinate++;
 		dot.style.left=dotCoordinate;
-		dot.style.top=750 - (xBias);
+		dot.style.top=700 - (xBias);
 		document.body.appendChild(dot);
 	}	
 		
@@ -74,9 +74,9 @@ function createDot(xBias)
 	 createDot(oldValue);
  }
  */ 
-  source.onmessage = function(event){  
+  source.onmessage = function(event){ 
 	 var data = JSON.parse(event.data);
-	 document.getElementById("result").innerHTML = "sensor data " + data;
+//	 document.getElementById("result").innerHTML = "sensor data " + data;
 	 sens0 = parseInt(data.sens0);
 	 sens1 = parseInt(data.sens1);
 	 sens2 = parseInt(data.sens2);
@@ -84,6 +84,7 @@ function createDot(xBias)
 	 sens4 = parseInt(data.sens4);
 	 sens5 = parseInt(data.sens5);
 	 sens6 = parseInt(data.sens6);
+	 document.getElementById("formattedDate").innerHTML = "Time on server is: " + data.formattedDate;
 	 document.getElementById("count").innerHTML = "count= " + data.count;
 	 document.getElementById("sens0").innerHTML = "sens0= " + sens0;
 	 document.getElementById("sens1").innerHTML = "sens1= " + sens1;
